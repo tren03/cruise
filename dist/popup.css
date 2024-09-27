@@ -63,25 +63,29 @@ body {
     margin-top: 10px;
     list-style-type: none;
     background-color: #1e1e1e;
+    max-height: 200px; /* Set a max height for scroll */
 }
 
 /* Styling each list item to match the input field's look */
-#results li {
-    padding: 2%;
+.result-item {
+    padding: 8px;
     font-size: 15px;
     font-family: "Courier New", Courier, monospace;
     color: white;
     background-color: #1e1e1e;
-    border: none;
-    outline: none;
-    margin-bottom: 5px;
     cursor: pointer;
+    border-bottom: 1px solid #333; /* Darker border to match terminal look */
 }
 
 /* Hover effect for list items */
-#results li:hover {
-    background-color: #333;
-    /* A bit darker for hover effect */
+.result-item:hover {
+    background-color: #333; /* A bit darker for hover effect */
+}
+
+/* Highlight state for the selected item */
+.result-item.highlight {
+    background-color: #00ff00; /* Green background for highlight */
+    color: #1e1e1e; /* Dark text for contrast */
 }
 
 /* Placeholder message for no results */
@@ -90,20 +94,4 @@ body {
     /* Grey out the 'no results' message */
     font-style: italic;
 }
-
-
-.result-item {
-    padding: 8px;
-    cursor: pointer;
-    border-bottom: 1px solid #ddd;
-}
-
-.result-item.highlight {
-    background-color: #f0f8ff; /* Light blue background for highlighted item */
-}
-
-.result-item:hover {
-    background-color: #f1f1f1; /* Slight hover effect */
-}
-
 
