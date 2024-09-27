@@ -1,14 +1,11 @@
 {
-  "manifest_version": 3,
-  "name": "Fuzzy Tab Finder",
-  "version": "1.0",
-  "description": "Fuzzy-find open tabs in Chrome",
-  "action": {
-    "default_popup": "popup.html",
-    "default_title": "Fuzzy Tab Finder"
-  },
-  "permissions": [
-    "tabs"
-  ]
+    "manifest_version": 3,
+    "name": "Fuzzy Tab Finder",
+    "version": "1.0",
+    "description": "Fuzzy-find open tabs in Chrome",
+    "action": {
+        "default_popup": "./dist/popup.html",
+        "default_title": "Fuzzy Tab Finder"
+    },
+    "permissions": ["tabs"]
 }
-

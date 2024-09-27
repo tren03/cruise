@@ -1,0 +1,17 @@
+{
+    "name": "chrome-fuzzy",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "dependencies": {
+        "fuse.js": "^7.0.0",
+        "webpack": "^5.95.0",
+        "webpack-cli": "^5.1.4"
+    }
+}
