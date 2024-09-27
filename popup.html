@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Fuzzy Tab Finder</title>
+        <link rel="stylesheet" href="popup.css" />
+    </head>
+    <body>
+        <div class="main-container">
+            <div class="input-wrapper">
+                <span class="dollar-sign">$</span>
+                <!-- Dollar sign -->
+                <input
+                    type="text"
+                    id="search"
+                    placeholder="Search"
+                    autocomplete="off"
+                    autofocus
+               />
+            </div>
+            <ul id="results"></ul>
+        </div>
+        <!-- Unordered list for rendering tab results -->
+        <script src="popup.js"></script>
+    </body>
+</html>

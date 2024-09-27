@@ -1,0 +1,93 @@
+/* General body styling for a terminal look */
+body {
+    width: 20rem;
+    margin: 0;
+    padding: 0;
+    font-family: "Courier New", Courier, monospace;
+    background-color: #1e1e1e;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Wrapper for input and dollar sign */
+.input-wrapper {
+    padding-top: 2%;
+    padding-left: 3%;
+    padding-right: 3%;
+    display: flex;
+    align-items: center;
+    width: 80%;
+}
+
+/* Styling for the dollar sign */
+.input-wrapper .dollar-sign {
+    color: #00ff00;
+    font-size: 16px;
+    margin-right: 5px;
+}
+
+/* Terminal-like input styling */
+#search {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    font-family: "Courier New", Courier, monospace;
+    background-color: #1e1e1e;
+    color: #00ff00;
+    border: none;
+    outline: none;
+    caret-color: #00ff00;
+}
+
+/* Placeholder styling to match the terminal theme */
+#search::placeholder {
+    color: #00ff00;
+    opacity: 0.8;
+}
+
+/* Main container for aligning the input and results */
+.main-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+}
+
+/* Styling for the unordered list of results */
+#results {
+    width: 80%;
+    padding-left: 3%;
+    padding-right: 3%;
+    margin-top: 10px;
+    list-style-type: none;
+    background-color: #1e1e1e;
+}
+
+/* Styling each list item to match the input field's look */
+#results li {
+    padding: 2%;
+    font-size: 15px;
+    font-family: "Courier New", Courier, monospace;
+    color: white;
+    background-color: #1e1e1e;
+    border: none;
+    outline: none;
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+/* Hover effect for list items */
+#results li:hover {
+    background-color: #333;
+    /* A bit darker for hover effect */
+}
+
+/* Placeholder message for no results */
+#results .no-results {
+    color: #999;
+    /* Grey out the 'no results' message */
+    font-style: italic;
+}
