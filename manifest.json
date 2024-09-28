@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Fuzzy Tab Finder",
+  "name": "cruise",
   "version": "1.0",
   "description": "Fuzzy-find open tabs in Chrome",
   "action": {
