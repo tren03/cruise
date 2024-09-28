@@ -17,7 +17,7 @@ let tabs = [];
 let history = [];
 let curwindowid;
 let isCurWindow;
-let currentMode = "T"
+let currentMode = "T";
 
 // getting id of current window to check if we need to switch focus to another window
 let curwindow = await chrome.windows.getCurrent();
@@ -90,7 +90,7 @@ function renderDropDown(filteredTabs, highlightMax) {
 
     limitedResults.forEach((tab, index) => {
         const li = document.createElement("li");
-        console.log("my current mode here "+currentMode)
+        console.log("my current mode here " + currentMode);
 
         // Set the text to include both title and URL
 
@@ -116,13 +116,14 @@ function renderDropDown(filteredTabs, highlightMax) {
 
         if (currentMode === "T") {
             // On click, switch to the clicked tab
+            console.log("we are adding Tab event list");
             li.addEventListener("click", () => {
                 chrome.tabs.update(tab.id, { active: true }); // Switch to the clicked tab
             });
         }
 
         if (currentMode === "H") {
-            console.log("added event lisner to hist data")
+            console.log("we are adding Hist event list");
             li.addEventListener("click", () => {
                 console.log("hist url : " + tab.url);
                 searchUrl(tab.url);
@@ -219,25 +220,22 @@ async function focusWindow(targetWindowId) {
 searchInput.addEventListener("input", (e) => {
     let query = e.target.value.trim();
     if (query === "") {
-        if(currentMode === "T" ){
-
-        renderDropDown(tabs, true);
+        if (currentMode === "T") {
+            renderDropDown(tabs, true);
         }
 
-        if(currentMode === "H" ){
-
-        renderDropDown(history, true);
+        if (currentMode === "H") {
+            renderDropDown(history, true);
         }
     } else {
         let fuzzres;
         if (currentMode === "T") {
             fuzzres = fuseTab.search(query);
-            console.log("render tab data")
+            console.log("render tab data");
         }
 
         if (currentMode === "H") {
-
-            console.log("render history data")
+            console.log("render history data");
             fuzzres = fuseHistory.search(query);
         }
         let filteredTabs = fuzzres.map((result) => result.item);
@@ -253,17 +251,17 @@ mainContainer[0].addEventListener("keydown", (e) => {
     }
 
     if (e.altKey && e.key === "h") {
-        renderDropDown(history, true);
+        currentMode = "H";
         console.log("Alt + H pressed!");
-        currentMode="H"
         currentModeNode.textContent = "H";
+        renderDropDown(history, true);
     }
 
     if (e.altKey && e.key === "t") {
-        renderDropDown(tabs, true);
+        currentMode = "T";
         console.log("Alt + T pressed!");
-        currentMode="T"
         currentModeNode.textContent = "T";
+        renderDropDown(tabs, true);
     }
 });
 
