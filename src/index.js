@@ -46,6 +46,7 @@ async function getTabs() {
     }
 }
 
+// Rendering dropdown
 function renderDropDown(filteredTabs, highlightMax) {
     resultsContainer.innerHTML = "";
     currentIndex = 0;
@@ -57,9 +58,8 @@ function renderDropDown(filteredTabs, highlightMax) {
         const li = document.createElement("li");
         li.innerHTML = `<strong>Search the web for it</strong>`;
         li.classList.add("result-item"); // Add a class for styling
-
         li.classList.add("highlight"); // You can define this class in CSS to apply styles (like background color)
-        li.setAttribute("data-search-element", true); // Store tab ID
+        li.setAttribute("data-search-element", true); // setting metadata for tab to search web
         resultsContainer.appendChild(li); // Append the list item to the unordered list
         return;
     }
@@ -91,6 +91,8 @@ function renderDropDown(filteredTabs, highlightMax) {
         resultsContainer.appendChild(li); // Append the list item to the unordered list
     });
 }
+
+// To handle the highlighting of list values
 function highlightItem(index) {
     const items = resultsContainer.querySelectorAll("li");
     items.forEach((item, i) => {
@@ -102,13 +104,37 @@ function highlightItem(index) {
         }
     });
 }
+
+async function searchUrl() {
+    try {
+        let urlValue = searchInput.value;
+        // we use encoded uri component so that we can pass strings like "hwllo world" with spaces to the url, spaces get converted to %20
+        let finalUrlValue =`https://www.google.com/search?q=${encodeURIComponent(urlValue)}`; 
+        let create = await chrome.tabs.create({url:finalUrlValue});
+        console.log(create);
+    } catch (err) {
+        console.log("error in creating tab"+err);
+    }
+}
+
+// To handle the navigation between list elements
 function handleNavigation(e) {
     const items = resultsContainer.querySelectorAll("li");
-    if (items.length === 1) {
-        console.log(
-            "meta data for search element" +
-            items[0].getAttribute("data-search-element"),
-        );
+
+    if (
+        items.length === 1 &&
+        // html stores meta values as strings it seems, so i need to check for string when i search the data-search-element attribute
+        items[0].getAttribute("data-search-element") === "true" &&
+        e.key === "Enter"
+    ) {
+        items[0].click(); // Trigger click on the selected item
+        console.log("you want to search the web");
+
+        searchUrl()
+            .then(() => console.log("success in creating new tab"))
+            .catch((err) => console.log("fail in creating new tab: " + err));
+
+        return;
     }
 
     if (e.key === "ArrowDown") {
@@ -159,6 +185,7 @@ mainContainer[0].addEventListener("keydown", (e) => {
         return;
     }
 
+    // Program just works, ill refactor this later
     if (e.key === "Enter") {
         let first_result = resultsContainer.querySelector("li");
         if (first_result) {
