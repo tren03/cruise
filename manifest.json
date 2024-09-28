@@ -7,7 +7,7 @@
     "default_popup": "./dist/popup.html",
     "default_title": "Fuzzy Tab Finder"
   },
-  "permissions": ["tabs"],
+  "permissions": ["tabs","history"],
   "commands": {
     "_execute_action": {
       "suggested_key": {

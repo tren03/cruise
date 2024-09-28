@@ -3,6 +3,8 @@ import Fuse from "fuse.js";
 const searchInput = document.getElementById("search");
 const resultsContainer = document.getElementById("results");
 const mainContainer = document.getElementsByClassName("main-container");
+const currentMode = document.getElementById("mode")
+
 const fuseOptions = {
     keys: ["title", "url"],
     threshold: 0.4,
@@ -44,6 +46,10 @@ async function getTabs() {
     } catch (error) {
         console.error("Error fetching tabs: ", error);
     }
+}
+
+async function getHistory(){
+     
 }
 
 // Rendering dropdown
@@ -185,14 +191,19 @@ mainContainer[0].addEventListener("keydown", (e) => {
         return;
     }
 
-    // Program just works, ill refactor this later
-    if (e.key === "Enter") {
-        let first_result = resultsContainer.querySelector("li");
-        if (first_result) {
-            first_result.click();
-            console.log("clicked");
-        }
+    if (e.altKey && e.key === "h") {
+        console.log("Alt + H pressed!");
+        currentMode.textContent = "H"
+
     }
+    
+    
+    if (e.altKey && e.key === "t") {
+        console.log("Alt + T pressed!");
+        currentMode.textContent = "T" 
+
+    }
+
 });
 
 getTabs();
