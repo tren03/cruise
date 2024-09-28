@@ -2,7 +2,7 @@ import Fuse from "fuse.js";
 
 const searchInput = document.getElementById("search");
 const resultsContainer = document.getElementById("results");
-
+const mainContainer = document.getElementsByClassName("main-container");
 const fuseOptions = {
     keys: ["title", "url"],
     threshold: 0.4,
@@ -13,8 +13,6 @@ let currentIndex = 0;
 let tabs = [];
 let curwindowid;
 let isCurWindow;
-
-let tabIndexInWindow = []; // this stores a pair {}
 
 // getting id of current window to check if we need to switch focus to another window
 let curwindow = await chrome.windows.getCurrent();
@@ -52,19 +50,32 @@ function renderDropDown(filteredTabs, highlightMax) {
     resultsContainer.innerHTML = "";
     currentIndex = 0;
 
-    let limitedResults = filteredTabs.slice(0, 7); // Limit results to 7
+    let limitedResults = filteredTabs.slice(0, 6); // Limit results to 7
+
+    // if no results, give option to search the web
+    if (limitedResults.length == 0) {
+        const li = document.createElement("li");
+        li.innerHTML = `<strong>Search the web for it</strong>`;
+        li.classList.add("result-item"); // Add a class for styling
+
+        li.classList.add("highlight"); // You can define this class in CSS to apply styles (like background color)
+        li.setAttribute("data-search-element", true); // Store tab ID
+        resultsContainer.appendChild(li); // Append the list item to the unordered list
+        return;
+    }
 
     limitedResults.forEach((tab, index) => {
         const li = document.createElement("li");
 
         // Set the text to include both title and URL
-        let inWindow = ""
-        if(tab.windowId != curwindowid){
-            inWindow = " (other tab)"
+        let inWindow = "";
+        if (tab.windowId != curwindowid) {
+            inWindow = " (other tab)";
         }
         li.innerHTML = `<strong>${tab.title}</strong><br><small>${tab.url}+${inWindow}</small>`;
         li.classList.add("result-item"); // Add a class for styling
         li.setAttribute("data-tab-id", tab.id); // Store tab ID
+        li.setAttribute("data-search-element", false); // Store tab ID
         li.setAttribute("data-window-id", tab.windowId);
 
         // Highlight the first result (highest score)
@@ -93,7 +104,12 @@ function highlightItem(index) {
 }
 function handleNavigation(e) {
     const items = resultsContainer.querySelectorAll("li");
-    if (items.length === 0) return;
+    if (items.length === 1) {
+        console.log(
+            "meta data for search element" +
+            items[0].getAttribute("data-search-element"),
+        );
+    }
 
     if (e.key === "ArrowDown") {
         currentIndex = (currentIndex + 1) % items.length; // Move down the list
@@ -103,11 +119,11 @@ function handleNavigation(e) {
         highlightItem(currentIndex);
     } else if (e.key === "Enter" && currentIndex >= 0) {
         items[currentIndex].click(); // Trigger click on the selected item
-        let tabWindow = items[currentIndex].getAttribute("data-window-id")
-        if(tabWindow != curwindowid){
-            focusWindow(tabWindow)
+        let tabWindow = items[currentIndex].getAttribute("data-window-id");
+        if (tabWindow != curwindowid) {
+            focusWindow(tabWindow);
         }
-        console.log("the clicked tab has window id "+tabWindow);
+        console.log("the clicked tab has window id " + tabWindow);
     }
 }
 
@@ -115,8 +131,8 @@ function handleNavigation(e) {
 async function focusWindow(targetWindowId) {
     try {
         // Update the target window to bring it into focus
-        console.log("type of target window sent down "+typeof(targetWindowId)) 
-        let numberTarget = Number(targetWindowId)
+        console.log("type of target window sent down " + typeof targetWindowId);
+        let numberTarget = Number(targetWindowId);
         await chrome.windows.update(numberTarget, { focused: true });
         console.log(`Switched focus to window with ID: ${numberTarget}`);
     } catch (error) {
@@ -124,14 +140,8 @@ async function focusWindow(targetWindowId) {
     }
 }
 
-
 // Event listener for search input
-searchInput.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowDown" || e.key === "ArrowUp" || e.key === "Enter") {
-        handleNavigation(e); // Handle navigation keys
-        e.preventDefault(); // Prevent default behavior for these keys
-        return;
-    }
+searchInput.addEventListener("input", (e) => {
     let query = e.target.value.trim();
     if (query === "") {
         renderDropDown(tabs, true);
@@ -139,6 +149,14 @@ searchInput.addEventListener("keydown", (e) => {
         let fuzzres = fuse.search(query);
         let filteredTabs = fuzzres.map((result) => result.item);
         renderDropDown(filteredTabs, true); // Pass true to highlight the max score
+    }
+});
+
+mainContainer[0].addEventListener("keydown", (e) => {
+    if (e.key === "ArrowDown" || e.key === "ArrowUp" || e.key === "Enter") {
+        handleNavigation(e); // Handle navigation keys
+        e.preventDefault(); // Prevent default behavior for these keys
+        return;
     }
 
     if (e.key === "Enter") {

@@ -8,17 +8,15 @@ body {
     color: #fff;
     display: flex;
     justify-content: center;
-    max-height: 100rem;
 }
 
 /* Wrapper for input and dollar sign */
 .input-wrapper {
-    padding-top: 2%;
-    padding-left: 1%;
-    padding-right: 1%;
+    padding: 8px;
+    font-size: 15px;
     display: flex;
     align-items: center;
-    width: 80%;
+    width: 90%;
 }
 
 /* Styling for the dollar sign */
@@ -52,18 +50,21 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
+    height: 100%;
     align-items: center;
 }
 
 /* Styling for the unordered list of results */
 #results {
-    width: 80%;
+    width: 90%;
     padding-left: 1%;
     padding-right: 1%;
+    padding-bottom: 1%;
     margin-top: 10px;
     list-style-type: none;
     background-color: #1e1e1e;
-    max-height: 200px; /* Set a max height for scroll */
+    height: auto; /* Dynamically adjust height */
+    overflow: visible; /* Allow it to expand without scrolling */
 }
 
 /* Styling each list item to match the input field's look */
@@ -74,18 +75,23 @@ body {
     color: white;
     background-color: #1e1e1e;
     cursor: pointer;
-    border-bottom: 1px solid #333; /* Darker border to match terminal look */
+    border-bottom: 1px solid #333;
+    word-wrap: break-word;
+    /* Darker border to match terminal look */
 }
 
 /* Hover effect for list items */
 .result-item:hover {
-    background-color: #333; /* A bit darker for hover effect */
+    background-color: #333;
+    /* A bit darker for hover effect */
 }
 
 /* Highlight state for the selected item */
 .result-item.highlight {
-    background-color: #00ff00; /* Green background for highlight */
-    color: #1e1e1e; /* Dark text for contrast */
+    background-color: #00ff00;
+    /* Green background for highlight */
+    color: #1e1e1e;
+    /* Dark text for contrast */
 }
 
 /* Placeholder message for no results */
