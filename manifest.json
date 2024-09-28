@@ -5,9 +5,9 @@
   "description": "Fuzzy-find open tabs in Chrome",
   "action": {
     "default_popup": "./dist/popup.html",
-    "default_title": "Fuzzy Tab Finder"
+    "default_title": "cruise"
   },
-  "permissions": ["tabs","history"],
+  "permissions": ["tabs","history","topSites","bookmarks"],
   "commands": {
     "_execute_action": {
       "suggested_key": {

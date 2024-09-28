@@ -10,20 +10,34 @@ const fuseOptions = {
     threshold: 0.4,
 };
 
+// To initialize fuse.js props
 let fuseTab;
 let fuseHistory;
+let fuseTopSites;
+let fuseBookmark;
+
+// To highlight elements in list
 let currentIndex = 0;
+
+// Stores the actual data we search in
 let tabs = [];
 let history = [];
+let topsites = [];
+let bookmarks = [];
+
+// For focusing on a tab in another window
 let curwindowid;
 let isCurWindow;
-let currentMode = "T";
 
-// getting id of current window to check if we need to switch focus to another window
+// For setting default mode, and to track change in mode
+let currentMode = "T"; // The Default mode is always T
+
+// Getting id of current window to check if we need to switch focus to another window
 let curwindow = await chrome.windows.getCurrent();
 curwindowid = curwindow.id;
 console.log("current window id" + curwindowid);
 
+// Getting all active tabs
 async function getTabs() {
     try {
         tabs = await chrome.tabs.query({}); // Fetch all the tabs
@@ -53,6 +67,7 @@ async function getTabs() {
     }
 }
 
+// Getting History details
 async function getHistory() {
     try {
         history = await chrome.history.search({
@@ -68,6 +83,50 @@ async function getHistory() {
     } catch (err) {
         console.log("problem in fetching history " + err);
     }
+}
+
+// Getting top sites
+async function getTopSites() {
+    try {
+        topsites = await chrome.topSites.get();
+        console.log("these are your top sites", topsites);
+        fuseTopSites = new Fuse(topsites, fuseOptions);
+        if (currentMode === "F") {
+            renderDropDown(topsites, true);
+        }
+    } catch (err) {
+        console.log("problem in fetching topsites " + err);
+    }
+}
+
+// Getting all bookmarks
+async function getBookmarks() {
+    try {
+        let tree = await chrome.bookmarks.getTree();
+        bookmarks = extractLinks(tree);
+        fuseBookmark = new Fuse(bookmarks, fuseOptions);
+        if (currentMode === "B") {
+            renderDropDown(bookmarks, true);
+        }
+    } catch (err) {
+        console.log("problem in fetching links " + err);
+    }
+}
+
+// traverse bookmark tree
+function extractLinks(nodes) {
+    let links = [];
+    function traverse(node) {
+        // only leaf node has url attr
+        if (node.url) {
+            links.push({ title: node.title, url: node.url });
+        }
+        if (node.children) {
+            node.children.forEach(traverse); // Traverse child nodes (folders)
+        }
+    }
+    nodes.forEach(traverse);
+    return links;
 }
 
 // Rendering dropdown
@@ -122,11 +181,13 @@ function renderDropDown(filteredTabs, highlightMax) {
             });
         }
 
-        if (currentMode === "H") {
-            console.log("we are adding Hist event list");
+        if (currentMode === "H" || currentMode === "F" || currentMode === "B") {
+            console.log(
+                "we are adding Hist and topsites and bookmark event list",
+            );
             li.addEventListener("click", () => {
                 console.log("hist url : " + tab.url);
-                searchUrl(tab.url);
+                searchValidUrl(tab.url);
             });
         }
 
@@ -147,21 +208,26 @@ function highlightItem(index) {
     });
 }
 
+// called only only when bookmark,topsite,history call with real urls 
+async function searchValidUrl(urlValue) {
+    try {
+        let create = await chrome.tabs.create({ url: urlValue });
+        console.log(create);
+    } catch (err) {
+        console.log("error in creating tab of real url" + err);
+    }
+}
+
+
+// called in case of no match
 async function searchUrl(urlValue) {
     try {
-        if (currentMode === "T") {
             // we use encoded uri component so that we can pass strings like "hwllo world" with spaces to the url, spaces get converted to %20
             let finalUrlValue = `https://www.google.com/search?q=${encodeURIComponent(urlValue)}`;
             let create = await chrome.tabs.create({ url: finalUrlValue });
             console.log(create);
-        }
-
-        if (currentMode === "H") {
-            let create = await chrome.tabs.create({ url: urlValue });
-            console.log(create);
-        }
     } catch (err) {
-        console.log("error in creating tab" + err);
+        console.log("error in creating tab of not real url" + err);
     }
 }
 
@@ -175,7 +241,6 @@ function handleNavigation(e) {
         items[0].getAttribute("data-search-element") === "true" &&
         e.key === "Enter"
     ) {
-        items[0].click(); // Trigger click on the selected item
         console.log("you want to search the web");
 
         searchUrl(searchInput.value)
@@ -227,16 +292,32 @@ searchInput.addEventListener("input", (e) => {
         if (currentMode === "H") {
             renderDropDown(history, true);
         }
+
+        if (currentMode === "F") {
+            renderDropDown(topsites, true);
+        }
+        if (currentMode === "B") {
+            renderDropDown(bookmarks, true);
+        }
     } else {
         let fuzzres;
         if (currentMode === "T") {
+            console.log("search tab data");
             fuzzres = fuseTab.search(query);
-            console.log("render tab data");
         }
 
         if (currentMode === "H") {
-            console.log("render history data");
+            console.log("search history data");
             fuzzres = fuseHistory.search(query);
+        }
+
+        if (currentMode === "F") {
+            console.log("search tab topsite data");
+            fuzzres = fuseTopSites.search(query);
+        }
+        if (currentMode === "B") {
+            console.log("search tab bookmark data");
+            fuzzres = fuseBookmark.search(query);
         }
         let filteredTabs = fuzzres.map((result) => result.item);
         renderDropDown(filteredTabs, true); // Pass true to highlight the max score
@@ -263,7 +344,24 @@ mainContainer[0].addEventListener("keydown", (e) => {
         currentModeNode.textContent = "T";
         renderDropDown(tabs, true);
     }
+
+    if (e.altKey && e.key === "b") {
+        currentMode = "B";
+        console.log("Alt + B pressed!");
+        currentModeNode.textContent = "B";
+        renderDropDown(bookmarks, true);
+    }
+
+    if (e.altKey && e.key === "f") {
+        e.preventDefault();
+        currentMode = "F";
+        console.log("Alt + F pressed!");
+        currentModeNode.textContent = "F";
+        renderDropDown(topsites, true);
+    }
 });
 
+getBookmarks();
+getTopSites();
 getHistory();
 getTabs();
