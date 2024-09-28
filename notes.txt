@@ -4,3 +4,7 @@ default shorcuts
 alt+y => open dialog
 alt+t => active tab mode [fuzzy search on active tabs]
 alt+h => history mode [fuzzy search on history]
+alt+f => most freq visited sites 
+alt+b => bookmark mode
+
+will add color themes now
