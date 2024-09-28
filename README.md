@@ -17,5 +17,5 @@ git clone https://github.com/tren03/cruise.git
 5. Click Load unpacked and select the directory where you cloned the repository.
 6. The extension is now loaded and ready to use.
 
-## Usasge
+## Usage
 I have set the command to open the dialog to Alt+Y, and navigation through the dropdown is done using the up and down arrow keys.
