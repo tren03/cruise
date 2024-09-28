@@ -1,1 +1,6 @@
 when you make a js change, run npx webpack on root and then check result in browser
+
+default shorcuts 
+alt+y => open dialog
+alt+t => active tab mode [fuzzy search on active tabs]
+alt+h => history mode [fuzzy search on history]
