@@ -10,6 +10,26 @@ const fuseOptions = {
     threshold: 0.4,
 };
 
+// Fuse.js settings for bookmarks since they have parent field too
+const bookmarkFuseOptions = {
+    keys: [
+        {
+            name: "title",
+            weight: 3,
+        },
+        {
+            name: "url",
+            weight: 2,
+        },
+
+        {
+            name: "parent",
+            weight: 1,
+        },
+    ],
+    threshold: 0.4,
+};
+
 // To initialize fuse.js props
 let fuseTab;
 let fuseHistory;
@@ -103,8 +123,10 @@ async function getTopSites() {
 async function getBookmarks() {
     try {
         let tree = await chrome.bookmarks.getTree();
+        console.log("tree + ", tree);
         bookmarks = extractLinks(tree);
-        fuseBookmark = new Fuse(bookmarks, fuseOptions);
+        console.log(bookmarks);
+        fuseBookmark = new Fuse(bookmarks, bookmarkFuseOptions);
         if (currentMode === "B") {
             renderDropDown(bookmarks, true);
         }
@@ -116,16 +138,27 @@ async function getBookmarks() {
 // traverse bookmark tree
 function extractLinks(nodes) {
     let links = [];
+    let parentMap = new Map();
     function traverse(node) {
-        // only leaf node has url attr
         if (node.url) {
-            links.push({ title: node.title, url: node.url });
+            links.push({
+                title: node.title,
+                url: node.url,
+                parent: node.parentId,
+            });
         }
         if (node.children) {
+            parentMap.set(node.id, node.title);
             node.children.forEach(traverse); // Traverse child nodes (folders)
         }
     }
     nodes.forEach(traverse);
+
+    console.log("parent map ", parentMap);
+    links.forEach((obj) => {
+        obj.parent = parentMap.get(obj.parent);
+    });
+
     return links;
 }
 
@@ -152,17 +185,25 @@ function renderDropDown(filteredTabs, highlightMax) {
         console.log("my current mode here " + currentMode);
 
         // Set the text to include both title and URL
-
         let inWindow = "";
         if (currentMode === "T") {
             if (tab.windowId != curwindowid) {
                 inWindow = " (other tab)";
             }
         }
-        li.innerHTML = `<strong>${tab.title}</strong><br><small>${tab.url}+${inWindow}</small>`;
-        li.classList.add("result-item"); // Add a class for styling
-        li.setAttribute("data-tab-id", tab.id); // Store tab ID
-        li.setAttribute("data-search-element", false); // Store tab ID
+
+        // since bookmarks need to include category
+        if (currentMode === "B") {
+            li.innerHTML = `<strong>${tab.title}</strong><br><small>${tab.url} Category = ${tab.parent}</small>`;
+            li.classList.add("result-item"); // Add a class for styling
+            li.setAttribute("data-tab-id", tab.id); // Store tab ID
+            li.setAttribute("data-search-element", false); // Store tab ID
+        } else {
+            li.innerHTML = `<strong>${tab.title}</strong><br><small>${tab.url}+${inWindow}</small>`;
+            li.classList.add("result-item"); // Add a class for styling
+            li.setAttribute("data-tab-id", tab.id); // Store tab ID
+            li.setAttribute("data-search-element", false); // Store tab ID
+        }
 
         if (currentMode === "T") {
             li.setAttribute("data-window-id", tab.windowId);
@@ -208,7 +249,7 @@ function highlightItem(index) {
     });
 }
 
-// called only only when bookmark,topsite,history call with real urls 
+// called only only when bookmark,topsite,history call with real urls
 async function searchValidUrl(urlValue) {
     try {
         let create = await chrome.tabs.create({ url: urlValue });
@@ -218,14 +259,13 @@ async function searchValidUrl(urlValue) {
     }
 }
 
-
 // called in case of no match
 async function searchUrl(urlValue) {
     try {
-            // we use encoded uri component so that we can pass strings like "hwllo world" with spaces to the url, spaces get converted to %20
-            let finalUrlValue = `https://www.google.com/search?q=${encodeURIComponent(urlValue)}`;
-            let create = await chrome.tabs.create({ url: finalUrlValue });
-            console.log(create);
+        // we use encoded uri component so that we can pass strings like "hwllo world" with spaces to the url, spaces get converted to %20
+        let finalUrlValue = `https://www.google.com/search?q=${encodeURIComponent(urlValue)}`;
+        let create = await chrome.tabs.create({ url: finalUrlValue });
+        console.log(create);
     } catch (err) {
         console.log("error in creating tab of not real url" + err);
     }
@@ -296,6 +336,7 @@ searchInput.addEventListener("input", (e) => {
         if (currentMode === "F") {
             renderDropDown(topsites, true);
         }
+
         if (currentMode === "B") {
             renderDropDown(bookmarks, true);
         }
