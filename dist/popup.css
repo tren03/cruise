@@ -1,3 +1,7 @@
+:root {
+    --theme-color: #00ff00; /* Default value */
+}
+
 /* General body styling for a terminal look */
 body {
     width: 40rem;
@@ -21,7 +25,8 @@ body {
 
 /* Styling for the dollar sign */
 .input-wrapper .dollar-sign {
-    color: #00ff00;
+    color: var(--theme-color);
+
     font-size: 16px;
     margin-right: 5px;
 }
@@ -33,15 +38,15 @@ body {
     font-size: 16px;
     font-family: "Courier New", Courier, monospace;
     background-color: #1e1e1e;
-    color: #00ff00;
+    color: var(--theme-color);
     border: none;
     outline: none;
-    caret-color: #00ff00;
+    caret-color: var(--theme-color);
 }
 
 /* Placeholder styling to match the terminal theme */
 #search::placeholder {
-    color: #00ff00;
+    color: var(--theme-color);
     opacity: 0.8;
 }
 
@@ -90,7 +95,7 @@ body {
 
 /* Highlight state for the selected item */
 .result-item.highlight {
-    background-color: #00ff00;
+    background-color: var(--theme-color);
     /* Green background for highlight */
     color: #1e1e1e;
     /* Dark text for contrast */

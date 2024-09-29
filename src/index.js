@@ -30,11 +30,73 @@ const bookmarkFuseOptions = {
     threshold: 0.4,
 };
 
+// fuse.js accept array of objects
+const availableColors = [
+    {
+        color: "Orange",
+        code: "#FFA500",
+    },
+    {
+        color: "White",
+        code: "#FFFFFF",
+    },
+    {
+        color: "Blue",
+        code: "#0000FF",
+    },
+    {
+        color: "Green",
+        code: "#00FF00",
+    },
+    {
+        color: "Red",
+        code: "#FF0000",
+    },
+    {
+        color: "Yellow",
+        code: "#FFFF00",
+    },
+    {
+        color: "Purple",
+        code: "#800080",
+    },
+    {
+        color: "Pink",
+        code: "#FFC0CB",
+    },
+    {
+        color: "Black",
+        code: "#000000",
+    },
+    {
+        color: "Gray",
+        code: "#808080",
+    },
+    {
+        color: "Cyan",
+        code: "#00FFFF",
+    },
+    {
+        color: "Magenta",
+        code: "#FF00FF",
+    },
+    {
+        color: "Teal",
+        code: "#008080",
+    }
+];
+
+const fuseColorOptions = {
+    keys: ["color"],
+    threshold: 0.4,
+};
+
 // To initialize fuse.js props
 let fuseTab;
 let fuseHistory;
 let fuseTopSites;
 let fuseBookmark;
+let fuseColors = new Fuse(availableColors, fuseColorOptions);
 
 // To highlight elements in list
 let currentIndex = 0;
@@ -162,6 +224,49 @@ function extractLinks(nodes) {
     return links;
 }
 
+// Takes a hex code of the color and changes css variable
+function updateThemeColor(color) {
+    let themeToSet;
+    console.log("updating theme");
+    if (localStorage.getItem("cruise-theme") === null) {
+        localStorage.setItem("cruise-theme", "#00ff00");
+    } else {
+        localStorage.setItem("cruise-theme", color);
+    }
+    themeToSet = localStorage.getItem("cruise-theme");
+    document.documentElement.style.setProperty("--theme-color", themeToSet);
+}
+
+function setThemeColor() {
+    let themeToSet;
+    console.log("setting theme");
+    if (localStorage.getItem("cruise-theme" === null)) {
+        localStorage.setItem("cruise-theme", "#00ff00");
+    }
+    themeToSet = localStorage.getItem("cruise-theme");
+    document.documentElement.style.setProperty("--theme-color", themeToSet);
+}
+
+function renderCommandDropDown(colorArray) {
+    console.log("enter command dropdown");
+    resultsContainer.innerHTML = "";
+    currentIndex = 0;
+    console.log("color array recieved ", colorArray);
+    colorArray.forEach((obj, index) => {
+        const li = document.createElement("li");
+        if (index == 0) {
+            li.classList.add("highlight"); // You can define this class in CSS to apply styles (like background color)
+        }
+        li.innerHTML = `<strong>${obj.color}</strong>`;
+        li.classList.add("result-item"); // Add a class for styling
+        li.addEventListener("click", () => {
+            updateThemeColor(obj.code);
+            console.log("you clicked ", obj.color, obj.code);
+        });
+        resultsContainer.appendChild(li);
+    });
+}
+
 // Rendering dropdown
 function renderDropDown(filteredTabs, highlightMax) {
     resultsContainer.innerHTML = "";
@@ -182,7 +287,7 @@ function renderDropDown(filteredTabs, highlightMax) {
 
     limitedResults.forEach((tab, index) => {
         const li = document.createElement("li");
-        console.log("my current mode here " + currentMode);
+        //        console.log("my current mode here " + currentMode);
 
         // Set the text to include both title and URL
         let inWindow = "";
@@ -216,16 +321,16 @@ function renderDropDown(filteredTabs, highlightMax) {
 
         if (currentMode === "T") {
             // On click, switch to the clicked tab
-            console.log("we are adding Tab event list");
+            //           console.log("we are adding Tab event list");
             li.addEventListener("click", () => {
                 chrome.tabs.update(tab.id, { active: true }); // Switch to the clicked tab
             });
         }
 
         if (currentMode === "H" || currentMode === "F" || currentMode === "B") {
-            console.log(
-                "we are adding Hist and topsites and bookmark event list",
-            );
+            //          console.log(
+            //             "we are adding Hist and topsites and bookmark event list",
+            //         );
             li.addEventListener("click", () => {
                 console.log("hist url : " + tab.url);
                 searchValidUrl(tab.url);
@@ -271,23 +376,32 @@ async function searchUrl(urlValue) {
     }
 }
 
-// To handle the navigation between list elements
+// To handle the navigation between list elements and click/enter function
 function handleNavigation(e) {
     const items = resultsContainer.querySelectorAll("li");
 
     if (
-        items.length === 1 &&
-        // html stores meta values as strings it seems, so i need to check for string when i search the data-search-element attribute
-        items[0].getAttribute("data-search-element") === "true" &&
-        e.key === "Enter"
+        currentMode === "T" ||
+        currentMode === "B" ||
+        currentMode === "F" ||
+        currentMode === "H"
     ) {
-        console.log("you want to search the web");
+        if (
+            items.length === 1 &&
+            // html stores meta values as strings it seems, so i need to check for string when i search the data-search-element attribute
+            items[0].getAttribute("data-search-element") === "true" &&
+            e.key === "Enter"
+        ) {
+            console.log("you want to search the web");
 
-        searchUrl(searchInput.value)
-            .then(() => console.log("success in creating new tab"))
-            .catch((err) => console.log("fail in creating new tab: " + err));
+            searchUrl(searchInput.value)
+                .then(() => console.log("success in creating new tab"))
+                .catch((err) =>
+                    console.log("fail in creating new tab: " + err),
+                );
 
-        return;
+            return;
+        }
     }
 
     if (e.key === "ArrowDown") {
@@ -324,6 +438,31 @@ async function focusWindow(targetWindowId) {
 // Event listener for search input
 searchInput.addEventListener("input", (e) => {
     let query = e.target.value.trim();
+
+    if (currentMode === "COL" && !query.startsWith("/")) {
+        currentMode = "T";
+        currentModeNode.textContent = "T";
+        renderDropDown(tabs, true);
+    }
+
+    if (query.startsWith("/c")) {
+        currentMode = "COL";
+        console.log("we are in color mode");
+        currentModeNode.textContent = "COL";
+
+        if (query == "/c") {
+            renderCommandDropDown(availableColors);
+        } else {
+            let colorquery = query.slice(2);
+            let trimmedColorQuery = colorquery.trim();
+            console.log("trimmed query ", trimmedColorQuery);
+            let fuzcol = fuseColors.search(trimmedColorQuery);
+            // since fuse.js returns array of obj in type {item :{obj}}
+            let filteredColors = fuzcol.map((result) => result.item);
+            renderCommandDropDown(filteredColors);
+        }
+        return;
+    }
     if (query === "") {
         if (currentMode === "T") {
             renderDropDown(tabs, true);
@@ -400,8 +539,11 @@ mainContainer[0].addEventListener("keydown", (e) => {
         currentModeNode.textContent = "F";
         renderDropDown(topsites, true);
     }
+
+    // COL mode change done in the input field
 });
 
+setThemeColor();
 getBookmarks();
 getTopSites();
 getHistory();
