@@ -106,8 +106,6 @@ async function getTabs() {
                 isCurWindow = false;
             }
 
-            console.log(tab)
-
             /*           console.log(`Tab ${index + 1}:`);
                        console.log(`ID: ${tab.id}`);
                        console.log(`Title: ${tab.title}`);
@@ -255,7 +253,8 @@ function renderDropDown(filteredTabs, highlightMax) {
     // if no results, give option to search the web
     if (limitedResults.length == 0) {
         const li = document.createElement("li");
-        li.innerHTML = `<strong>Search the web for it</strong>`;
+        li.innerHTML = `<img src="fav.png" alt="favicon" style="width:20px; height: 20px; margin-right: 8px; padding: 1px ; border-radius: 4px;">
+<strong>Search the web for it</strong>`;
         li.classList.add("result-item"); // Add a class for styling
         li.classList.add("highlight"); // You can define this class in CSS to apply styles (like background color)
         li.setAttribute("data-search-element", true); // setting metadata for tab to search web
@@ -277,12 +276,24 @@ function renderDropDown(filteredTabs, highlightMax) {
 
         // since bookmarks need to include category
         if (currentMode === "B") {
-            li.innerHTML = `<strong>${tab.title}</strong><br><small>${tab.url} Category = ${tab.parent}</small>`;
+            li.innerHTML = `<img src="fav.png" alt="favicon" style="width:20px; height: 20px; margin-right: 8px; padding: 1px ; border-radius: 4px;">
+<strong>${tab.title}</strong><br><small>${tab.url} Category = ${tab.parent}</small>`;
             li.classList.add("result-item"); // Add a class for styling
             li.setAttribute("data-tab-id", tab.id); // Store tab ID
             li.setAttribute("data-search-element", false); // Store tab ID
         } else {
-            li.innerHTML = `<strong>${tab.title}</strong><br><small>${tab.url}+${inWindow}</small>`;
+            if (tab.favIconUrl) {
+                li.innerHTML = `
+    <img src="${tab.favIconUrl}" alt="favicon" style="width: 20px; height: 20px; margin-right: 8px; padding: 1px;  border-radius: 4px;">
+    <strong>${tab.title}</strong><br>
+    <small>${tab.url} ${inWindow}</small>`;
+            } else {
+                li.innerHTML = `
+    <img src="fav.png" alt="favicon" style="width:20px; height: 20px; margin-right: 8px; padding: 1px ; border-radius: 4px;">
+    <strong>${tab.title}</strong><br>
+    <small>${tab.url} ${inWindow}</small>`;
+            }
+
             li.classList.add("result-item"); // Add a class for styling
             li.setAttribute("data-tab-id", tab.id); // Store tab ID
             li.setAttribute("data-search-element", false); // Store tab ID
@@ -444,7 +455,7 @@ searchInput.addEventListener("input", (e) => {
     }
 
     if (query.startsWith("/")) {
-        console.log("in command")
+        console.log("in command");
         resultsContainer.innerHTML = "";
         currentMode = "COL";
         currentModeNode.textContent = "COL";
@@ -512,11 +523,10 @@ searchInput.addEventListener("input", (e) => {
 });
 
 mainContainer[0].addEventListener("keydown", (e) => {
-
-    if (e.shiftKey && e.key === "Enter" ){
-        console.log("shift + enter pressed")
-        let queryToSearch = searchInput.value 
-        searchUrl(queryToSearch)
+    if (e.shiftKey && e.key === "Enter") {
+        console.log("shift + enter pressed");
+        let queryToSearch = searchInput.value;
+        searchUrl(queryToSearch);
     }
 
     if (e.key === "ArrowDown" || e.key === "ArrowUp" || e.key === "Enter") {
@@ -524,7 +534,6 @@ mainContainer[0].addEventListener("keydown", (e) => {
         e.preventDefault(); // Prevent default behavior for these keys
         return;
     }
-    
 
     if (e.altKey && e.key === "h") {
         currentMode = "H";
