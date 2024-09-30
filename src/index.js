@@ -41,49 +41,25 @@ const availableColors = [
         code: "#FFFFFF",
     },
     {
-        color: "Blue",
-        code: "#0000FF",
-    },
-    {
         color: "Green",
-        code: "#00FF00",
+        code: "#67BB67",
     },
     {
-        color: "Red",
-        code: "#FF0000",
+        color: "Pastel Red",
+        code: "#FF8383",
     },
     {
         color: "Yellow",
         code: "#FFFF00",
     },
     {
-        color: "Purple",
-        code: "#800080",
-    },
-    {
-        color: "Pink",
-        code: "#FFC0CB",
-    },
-    {
-        color: "Black",
-        code: "#000000",
-    },
-    {
         color: "Gray",
-        code: "#808080",
-    },
-    {
-        color: "Cyan",
-        code: "#00FFFF",
-    },
-    {
-        color: "Magenta",
-        code: "#FF00FF",
+        code: "#A8A8A8",
     },
     {
         color: "Teal",
-        code: "#008080",
-    }
+        code: "#7DB7B7",
+    },
 ];
 
 const fuseColorOptions = {
@@ -129,6 +105,8 @@ async function getTabs() {
             } else {
                 isCurWindow = false;
             }
+
+            console.log(tab)
 
             /*           console.log(`Tab ${index + 1}:`);
                        console.log(`ID: ${tab.id}`);
@@ -410,7 +388,7 @@ function handleNavigation(e) {
     } else if (e.key === "ArrowUp") {
         currentIndex = (currentIndex - 1 + items.length) % items.length; // Move up the list
         highlightItem(currentIndex);
-    } else if (e.key === "Enter" && currentIndex >= 0) {
+    } else if (e.key === "Enter" && !e.shiftKey && currentIndex >= 0) {
         items[currentIndex].click(); // Trigger click on the selected item
         if (currentMode === "T") {
             let tabWindow = items[currentIndex].getAttribute("data-window-id");
@@ -431,8 +409,27 @@ async function focusWindow(targetWindowId) {
         await chrome.windows.update(numberTarget, { focused: true });
         console.log(`Switched focus to window with ID: ${numberTarget}`);
     } catch (error) {
-        console.error("Error switching focus to window: ", error);
+        console.log("Error switching focus to window: ", error);
     }
+}
+
+// render dropdown for help
+function renderHelpDropDown() {
+    resultsContainer.innerHTML = "";
+    const li = document.createElement("li");
+    li.innerHTML = `<strong>Go to Cruise man pages</strong><br>`;
+    li.classList.add("result-item"); // Add a class for styling
+    li.classList.add("highlight");
+    li.addEventListener("click", function() {
+        chrome.tabs.create({ url: chrome.runtime.getURL("help.html") });
+    });
+
+    li.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            chrome.tabs.create({ url: chrome.runtime.getURL("help.html") });
+        }
+    });
+    resultsContainer.appendChild(li);
 }
 
 // Event listener for search input
@@ -443,23 +440,33 @@ searchInput.addEventListener("input", (e) => {
         currentMode = "T";
         currentModeNode.textContent = "T";
         renderDropDown(tabs, true);
+        return;
     }
 
-    if (query.startsWith("/c")) {
+    if (query.startsWith("/")) {
+        console.log("in command")
+        resultsContainer.innerHTML = "";
         currentMode = "COL";
-        console.log("we are in color mode");
         currentModeNode.textContent = "COL";
+        if (query.startsWith("/h")) {
+            renderHelpDropDown();
 
-        if (query == "/c") {
-            renderCommandDropDown(availableColors);
-        } else {
-            let colorquery = query.slice(2);
-            let trimmedColorQuery = colorquery.trim();
-            console.log("trimmed query ", trimmedColorQuery);
-            let fuzcol = fuseColors.search(trimmedColorQuery);
-            // since fuse.js returns array of obj in type {item :{obj}}
-            let filteredColors = fuzcol.map((result) => result.item);
-            renderCommandDropDown(filteredColors);
+            return;
+        }
+        if (query.startsWith("/c")) {
+            console.log("we are in color mode");
+            if (query == "/c") {
+                renderCommandDropDown(availableColors);
+            } else {
+                let colorquery = query.slice(2);
+                let trimmedColorQuery = colorquery.trim();
+                console.log("trimmed query ", trimmedColorQuery);
+                let fuzcol = fuseColors.search(trimmedColorQuery);
+                // since fuse.js returns array of obj in type {item :{obj}}
+                let filteredColors = fuzcol.map((result) => result.item);
+                renderCommandDropDown(filteredColors);
+            }
+            return;
         }
         return;
     }
@@ -505,11 +512,19 @@ searchInput.addEventListener("input", (e) => {
 });
 
 mainContainer[0].addEventListener("keydown", (e) => {
+
+    if (e.shiftKey && e.key === "Enter" ){
+        console.log("shift + enter pressed")
+        let queryToSearch = searchInput.value 
+        searchUrl(queryToSearch)
+    }
+
     if (e.key === "ArrowDown" || e.key === "ArrowUp" || e.key === "Enter") {
         handleNavigation(e); // Handle navigation keys
         e.preventDefault(); // Prevent default behavior for these keys
         return;
     }
+    
 
     if (e.altKey && e.key === "h") {
         currentMode = "H";
