@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cruise Man page</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            color: #fff;
+            background-color: #1e1e1e;
+            font-family: "Courier New", Courier, monospace;
+        }
+
+        .main-container {
+            text-align: center;
+            padding-right: 10px;
+            padding-left: 10px;
+        }
+
+        li {
+            line-height: 1.4;
+            font-size: 15px;
+            /* Adjust line spacing for all paragraphs */
+        }
+
+        /* Set line spacing for all paragraphs */
+        p {
+            line-height: 1.4;
+            /* Adjust line spacing for all paragraphs */
+        }
+
+        .intro {
+            text-align: center;
+            padding-left: 40px;
+            padding-right: 40px;
+            font-size: 1.2rem;
+        }
+
+        .modes-container,
+        .commands-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #2a2a2a;
+        }
+
+        .modes-container h2,
+        .commands-container h2 {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        /* Ensure text inside <ul> is left-aligned */
+        .modes-container ul,
+        .commands-container ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        .modes-container li,
+        .commands-container li {
+            margin-bottom: 15px;
+            padding: 5px;
+            /* Add padding to each list item */
+        }
+
+        .modes-container li strong,
+        .commands-container li strong {
+            color: #69a6ff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="main-heading">
+            <h1>Cruise Man Pages</h1>
+        </div>
+        <div class="intro">
+            <p>
+                Cruise is a browser extension designed to streamline tab
+                management, navigation, and enhance productivity for power
+                users. With Cruise, users can quickly navigate between open
+                tabs, access frequently visited websites, search through
+                their browser history, and manage bookmarks — all from a
+                single, intuitive interface.<br>
+                [It also changes the theme based on your preffered browser theme]
+
+
+            </p>
+        </div>
+        <div class="modes-container">
+            <h2>Modes</h2>
+            <ul>
+
+                <li>
+                    <strong>Force Search:</strong> Shift + enter <br />
+                        Search the query on the web, in any mode, regardless of the options shown.
+                </li>
+                <li>
+                    <strong>Active Tab Mode:</strong> Alt + t <br />
+                    Search and navigate between active tabs. This is the
+                    default mode. If the tab you want to navigate to is not
+                    in your current window, Cruise will bring the window
+                    containing the tab into focus, and navigate to the
+                    requested tab.
+                </li>
+                <li>
+                    <strong>History Mode:</strong> Alt + h <br />
+                    Search through the last 100 visited sites and navigate
+                    to a URL by selecting or pressing enter.
+                </li>
+                <li>
+                    <strong>Bookmark Mode:</strong> Alt + b <br />
+                    Search your saved bookmarks
+                </li>
+                <li>
+                    <strong>Frequent Mode:</strong> Alt + f <br />
+                    Search your most frequently visited websites
+                </li>
+            </ul>
+        </div>
+
+        <div class="commands-container">
+            <h2>Commands</h2>
+            <ul>
+                <li>
+                    <strong>Change Theme:</strong> /c <br />
+                    Change the appearance of Cruise by selecting from a
+                    range of available themes.
+                </li>
+
+                <li>
+                    <strong>Man Pages:</strong> /h <br />
+                    Bring up the Cruise Help pages
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>

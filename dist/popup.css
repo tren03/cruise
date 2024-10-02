@@ -1,10 +1,46 @@
+:root {
+    --theme-color: #FFA500; /* Default value */
+    --background-color: #fafafa;
+    --text-color:#1e1e1e;
+    --hover-color:#FFA500;
+
+    
+/*
+
+dark
+    --theme-color: #FFA500; 
+    --background-color: #1e1e1e;
+    --text-color:#FFFFFF;
+    --hover-color:#FFA500;
+*/
+    
+}/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --theme-color: #FFA500;       /* Keep the same theme color */
+        --background-color:#1e1e1e;  /* Dark background */
+        --text-color: #FFFFFF;        /* Light text for dark background */
+        --hover-color: #FFA500;       /* Keep the same hover color */
+    }
+}
+
+/* Light mode styles */
+@media (prefers-color-scheme: light) {
+    :root {
+        --theme-color: #FFA500;        /* Default theme color */
+        --background-color: #1e1e1e;   /* Light background */
+        --text-color: #444444;         /* Dark text */
+        --hover-color: #FFA500;        /* Keep hover color same */
+    }
+}
+
 /* General body styling for a terminal look */
 body {
     width: 40rem;
     margin: 0;
     padding: 0;
     font-family: "Courier New", Courier, monospace;
-    background-color: #1e1e1e;
+    background-color: var(--background-color);
     color: #fff;
     display: flex;
     justify-content: center;
@@ -21,9 +57,7 @@ body {
 
 /* Styling for the dollar sign */
 .input-wrapper .dollar-sign {
-    color: #00ff00;
-    font-size: 16px;
-    margin-right: 5px;
+    color: var(--text-color);
 }
 
 /* Terminal-like input styling */
@@ -32,16 +66,16 @@ body {
     padding: 10px;
     font-size: 16px;
     font-family: "Courier New", Courier, monospace;
-    background-color: #1e1e1e;
-    color: #00ff00;
+    background-color: var(--background-color);
+    color: var(--text-color);
     border: none;
     outline: none;
-    caret-color: #00ff00;
+    caret-color: var(--theme-color);
 }
 
 /* Placeholder styling to match the terminal theme */
 #search::placeholder {
-    color: #00ff00;
+    color: var(--text-color);
     opacity: 0.8;
 }
 
@@ -52,6 +86,7 @@ body {
     width: 100%;
     height: 100%;
     align-items: center;
+
 }
 
 /* Styling for the unordered list of results */
@@ -60,44 +95,63 @@ body {
     padding-left: 1%;
     padding-right: 1%;
     padding-bottom: 1%;
-    margin-top: 10px;
     list-style-type: none;
-    background-color: #1e1e1e;
-    height: auto; /* Dynamically adjust height */
-    overflow: visible; /* Allow it to expand without scrolling */
+    margin: 0;
+    background-color: var(--background-color);
+    height: auto;
 }
 
 /* Styling each list item to match the input field's look */
-.result-item {
+.result-item { 
+    display: flex;
+    align-items: center;         /* Align items vertically center */
+    margin: 10px;
     padding: 8px;
     font-size: 15px;
     font-family: "Courier New", Courier, monospace;
-    color: white;
-    background-color: #1e1e1e;
+    color: var(--text-color);
+    background-color: var(--background-color);
     cursor: pointer;
-    border-bottom: 1px solid #333;
-    word-wrap: break-word;
-    /* Darker border to match terminal look */
+    border: 1px solid #333;
+    border-radius: 8px;
+    box-shadow: 4px 4px rgba(0, 0, 0); /* Add shadow */
+    overflow-wrap: break-word;   /* Handle breaking of long URLs */
+    white-space: normal;         /* Allow wrapping of the text */
+    width: 100%;                 /* Ensure the item takes the full width of the parent */
+    box-sizing: border-box;      /* Include padding and border in the width calculation */
+}
+
+.result-item-text{
+    max-width: 95%;
+    display: flex;
+    flex-direction: column;
+    word-wrap: break-word;       /* Eesure long words/URLs wrap */
+    overflow-wrap: break-word;   /* Handle breaking of long URLs */
+
 }
 
 /* Hover effect for list items */
 .result-item:hover {
-    background-color: #333;
+    background-color: var(--theme-color);
     /* A bit darker for hover effect */
 }
 
 /* Highlight state for the selected item */
 .result-item.highlight {
-    background-color: #00ff00;
+    background-color: var(--theme-color);
     /* Green background for highlight */
-    color: #1e1e1e;
+    color: var(--background-color);
     /* Dark text for contrast */
 }
 
-/* Placeholder message for no results */
-#results .no-results {
-    color: #999;
-    /* Grey out the 'no results' message */
-    font-style: italic;
+#mode {
+    padding: 10px;
+    font-size: 16px;
+    color: var(--text-color);
 }
 
+.help{
+    padding-bottom:10px;
+    font-size:medium
+
+}
