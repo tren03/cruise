@@ -1,5 +1,37 @@
 :root {
-    --theme-color: #00ff00; /* Default value */
+    --theme-color: #FFA500; /* Default value */
+    --background-color: #fafafa;
+    --text-color:#1e1e1e;
+    --hover-color:#FFA500;
+
+    
+/*
+
+dark
+    --theme-color: #FFA500; 
+    --background-color: #1e1e1e;
+    --text-color:#FFFFFF;
+    --hover-color:#FFA500;
+*/
+    
+}/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --theme-color: #FFA500;       /* Keep the same theme color */
+        --background-color: #1e1e1e;  /* Dark background */
+        --text-color: #FFFFFF;        /* Light text for dark background */
+        --hover-color: #FFA500;       /* Keep the same hover color */
+    }
+}
+
+/* Light mode styles */
+@media (prefers-color-scheme: light) {
+    :root {
+        --theme-color: #FFA500;        /* Default theme color */
+        --background-color: #fafafa;   /* Light background */
+        --text-color: #1e1e1e;         /* Dark text */
+        --hover-color: #FFA500;        /* Keep hover color same */
+    }
 }
 
 /* General body styling for a terminal look */
@@ -8,7 +40,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: "Courier New", Courier, monospace;
-    background-color: #1e1e1e;
+    background-color: var(--background-color);
     color: #fff;
     display: flex;
     justify-content: center;
@@ -25,8 +57,7 @@ body {
 
 /* Styling for the dollar sign */
 .input-wrapper .dollar-sign {
-    color: var(--theme-color);
-
+    color: var(--text-color);
 }
 
 /* Terminal-like input styling */
@@ -35,8 +66,8 @@ body {
     padding: 10px;
     font-size: 16px;
     font-family: "Courier New", Courier, monospace;
-    background-color: #1e1e1e;
-    color: var(--theme-color);
+    background-color: var(--background-color);
+    color: var(--text-color);
     border: none;
     outline: none;
     caret-color: var(--theme-color);
@@ -44,7 +75,7 @@ body {
 
 /* Placeholder styling to match the terminal theme */
 #search::placeholder {
-    color: var(--theme-color);
+    color: var(--text-color);
     opacity: 0.8;
 }
 
@@ -66,32 +97,42 @@ body {
     padding-bottom: 1%;
     list-style-type: none;
     margin: 0;
-    background-color: #1e1e1e;
+    background-color: var(--background-color);
     height: auto;
-    /* Dynamically adjust height */
-    overflow: visible;
-    /* Allow it to expand without scrolling */
 }
 
 /* Styling each list item to match the input field's look */
-.result-item {
+.result-item { 
+    display: flex;
+    align-items: center;         /* Align items vertically center */
     margin: 10px;
     padding: 8px;
     font-size: 15px;
     font-family: "Courier New", Courier, monospace;
-    color: white;
-    background-color: #1e1e1e;
+    color: var(--text-color);
+    background-color: var(--background-color);
     cursor: pointer;
     border: 1px solid #333;
     border-radius: 8px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6); /* Add shadow */
-    word-wrap: break-word;
-    /* Darker border to match terminal look */
+    box-shadow: 4px 4px rgba(0, 0, 0); /* Add shadow */
+    overflow-wrap: break-word;   /* Handle breaking of long URLs */
+    white-space: normal;         /* Allow wrapping of the text */
+    width: 100%;                 /* Ensure the item takes the full width of the parent */
+    box-sizing: border-box;      /* Include padding and border in the width calculation */
+}
+
+.result-item-text{
+    max-width: 95%;
+    display: flex;
+    flex-direction: column;
+    word-wrap: break-word;       /* Eesure long words/URLs wrap */
+    overflow-wrap: break-word;   /* Handle breaking of long URLs */
+
 }
 
 /* Hover effect for list items */
 .result-item:hover {
-    background-color: #333;
+    background-color: var(--theme-color);
     /* A bit darker for hover effect */
 }
 
@@ -99,19 +140,13 @@ body {
 .result-item.highlight {
     background-color: var(--theme-color);
     /* Green background for highlight */
-    color: #1e1e1e;
+    color: var(--background-color);
     /* Dark text for contrast */
 }
 
-/* Placeholder message for no results */
-#results .no-results {
-    color: #999;
-    /* Grey out the 'no results' message */
-    font-style: italic;
-}
 #mode {
     padding: 10px;
     font-size: 16px;
-    color: white;
+    color: var(--text-color);
 }
 

@@ -5,6 +5,9 @@ const resultsContainer = document.getElementById("results");
 const mainContainer = document.getElementsByClassName("main-container");
 const currentModeNode = document.getElementById("mode");
 
+
+
+
 const fuseOptions = {
     keys: ["title", "url"],
     threshold: 0.4,
@@ -37,20 +40,12 @@ const availableColors = [
         code: "#FFA500",
     },
     {
-        color: "White",
-        code: "#FFFFFF",
-    },
-    {
         color: "Green",
         code: "#67BB67",
     },
     {
         color: "Pastel Red",
         code: "#FF8383",
-    },
-    {
-        color: "Yellow",
-        code: "#FFFF00",
     },
     {
         color: "Gray",
@@ -266,6 +261,9 @@ function renderDropDown(filteredTabs, highlightMax) {
         const li = document.createElement("li");
         //        console.log("my current mode here " + currentMode);
 
+        let urlObj = new URL(tab.url);
+        let mainDomain = urlObj.hostname.replace("www.", "");
+
         // Set the text to include both title and URL
         let inWindow = "";
         if (currentMode === "T") {
@@ -277,7 +275,12 @@ function renderDropDown(filteredTabs, highlightMax) {
         // since bookmarks need to include category
         if (currentMode === "B") {
             li.innerHTML = `<img src="fav.png" alt="favicon" style="width:20px; height: 20px; margin-right: 8px; padding: 1px ; border-radius: 4px;">
-<strong>${tab.title}</strong><br><small>${tab.url} Category = ${tab.parent}</small>`;
+
+    <div class="result-item-text">
+    <strong style="display: block;">${tab.title}</strong>
+    <small style="display: block;">${tab.url} Category = ${tab.parent}</small>
+    </div>`;
+
             li.classList.add("result-item"); // Add a class for styling
             li.setAttribute("data-tab-id", tab.id); // Store tab ID
             li.setAttribute("data-search-element", false); // Store tab ID
@@ -285,13 +288,17 @@ function renderDropDown(filteredTabs, highlightMax) {
             if (tab.favIconUrl) {
                 li.innerHTML = `
     <img src="${tab.favIconUrl}" alt="favicon" style="width: 20px; height: 20px; margin-right: 8px; padding: 1px;  border-radius: 4px;">
-    <strong>${tab.title}</strong><br>
-    <small>${tab.url} ${inWindow}</small>`;
+    <div class="result-item-text">
+         <strong style="display: block;">${tab.title}</strong>
+    <small style="display: block;">${mainDomain} ${inWindow}</small>
+    </div>`;
             } else {
                 li.innerHTML = `
     <img src="fav.png" alt="favicon" style="width:20px; height: 20px; margin-right: 8px; padding: 1px ; border-radius: 4px;">
-    <strong>${tab.title}</strong><br>
-    <small>${tab.url} ${inWindow}</small>`;
+    <div class="result-item-text">
+    <strong style="display: block;">${tab.title}</strong>
+    <small style="display: block;">${mainDomain} ${inWindow}</small>
+    </div>`;
             }
 
             li.classList.add("result-item"); // Add a class for styling
