@@ -114,7 +114,7 @@ body {
     cursor: pointer;
     border: 1px solid #333;
     border-radius: 8px;
-    box-shadow: 4px 4px rgba(0, 0, 0); /* Add shadow */
+    box-shadow: 4px 4px 8px rgba(0, 0, 0,0.3); /* Add shadow */
     overflow-wrap: break-word;   /* Handle breaking of long URLs */
     white-space: normal;         /* Allow wrapping of the text */
     width: 100%;                 /* Ensure the item takes the full width of the parent */
@@ -150,3 +150,8 @@ body {
     color: var(--text-color);
 }
 
+.help{
+    padding-bottom:10px;
+    font-size:medium
+
+}

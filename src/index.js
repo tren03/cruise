@@ -101,6 +101,8 @@ async function getTabs() {
                 isCurWindow = false;
             }
 
+            console.log(tab)
+
             /*           console.log(`Tab ${index + 1}:`);
                        console.log(`ID: ${tab.id}`);
                        console.log(`Title: ${tab.title}`);
@@ -435,7 +437,7 @@ async function focusWindow(targetWindowId) {
 function renderHelpDropDown() {
     resultsContainer.innerHTML = "";
     const li = document.createElement("li");
-    li.innerHTML = `<strong>Go to Cruise man pages</strong><br>`;
+    li.innerHTML = `<strong>Go to the Cruise help page</strong><br>`;
     li.classList.add("result-item"); // Add a class for styling
     li.classList.add("highlight");
     li.addEventListener("click", function() {
