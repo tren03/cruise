@@ -28,8 +28,8 @@ dark
 @media (prefers-color-scheme: light) {
     :root {
         --theme-color: #FFA500;        /* Default theme color */
-        --background-color: #1e1e1e;   /* Light background */
-        --text-color: #444444;         /* Dark text */
+        --background-color: #fafafa;   /* Light background */
+        --text-color: #1e1e1e;         /* Dark text */
         --hover-color: #FFA500;        /* Keep hover color same */
     }
 }
@@ -152,6 +152,6 @@ body {
 
 .help{
     padding-bottom:10px;
-    font-size:medium
-
+    font-size:medium;
+    color:var(--text-color)
 }
