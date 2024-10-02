@@ -51,7 +51,8 @@ Use `Alt + <key>` to switch between modes:
 - `B` - Bookmarks
 - `F` - Most Frequent Sites
   
-Click on any option shown or hit Enter to go the the highlighted option
+Click on any option shown or hit Enter to go the the highlighted option </br>
+The Mode is indicated by a letter the the input bar to the left
   
 https://github.com/user-attachments/assets/e13a0af0-753a-497c-8856-99de98a649cc
 
