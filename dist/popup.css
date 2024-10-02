@@ -18,7 +18,7 @@ dark
 @media (prefers-color-scheme: dark) {
     :root {
         --theme-color: #FFA500;       /* Keep the same theme color */
-        --background-color: #1e1e1e;  /* Dark background */
+        --background-color:#1e1e1e;  /* Dark background */
         --text-color: #FFFFFF;        /* Light text for dark background */
         --hover-color: #FFA500;       /* Keep the same hover color */
     }
@@ -28,8 +28,8 @@ dark
 @media (prefers-color-scheme: light) {
     :root {
         --theme-color: #FFA500;        /* Default theme color */
-        --background-color: #fafafa;   /* Light background */
-        --text-color: #1e1e1e;         /* Dark text */
+        --background-color: #1e1e1e;   /* Light background */
+        --text-color: #444444;         /* Dark text */
         --hover-color: #FFA500;        /* Keep hover color same */
     }
 }
@@ -114,7 +114,7 @@ body {
     cursor: pointer;
     border: 1px solid #333;
     border-radius: 8px;
-    box-shadow: 4px 4px 8px rgba(0, 0, 0,0.3); /* Add shadow */
+    box-shadow: 4px 4px rgba(0, 0, 0); /* Add shadow */
     overflow-wrap: break-word;   /* Handle breaking of long URLs */
     white-space: normal;         /* Allow wrapping of the text */
     width: 100%;                 /* Ensure the item takes the full width of the parent */
