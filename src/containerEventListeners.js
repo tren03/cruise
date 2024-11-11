@@ -5,7 +5,7 @@ import { renderDropDown } from "./renderDropDown"
 import { searchUrl } from "./urlHandlers"
 import { data } from "./data"
 
-export function addEvents() {
+export function containerEventListeners() {
     mainContainer[0].addEventListener('keydown', (e) => {
         if (e.shiftKey && e.key === 'Enter') {
             console.log('shift + enter pressed')
@@ -47,6 +47,7 @@ export function addEvents() {
             currentModeNode.textContent = 'F'
             renderDropDown(data.topsites)
         }
+
         // COL mode change done in the input field
     })
 }

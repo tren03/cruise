@@ -1,13 +1,14 @@
 import { setThemeColor } from './colors'
 import { currentState, getCurWindow } from './currentState'
-import { addEvents } from './containerEventListeners'
+import { containerEventListeners } from './containerEventListeners'
 import { getTabs, getHistory, getTopSites, getBookmarks } from './getData'
 import { searchInputEventListener } from './searchInputEventListener'
 
 console.log('current window id' + currentState.currentWindowId)
+// Need to figure how to toggle tabs quickly and implement marks
 
 // Event listener for search input
-addEvents()
+containerEventListeners()
 searchInputEventListener()
 
 // Get ID of current window, helps in switching tabs between browser insatnces

@@ -1,4 +1,4 @@
-import { resultsContainer } from './htmlElements'
+import { resultsContainer, searchInput } from './htmlElements'
 import { searchUrl } from './urlHandlers'
 import { currentState } from './currentState'
 
