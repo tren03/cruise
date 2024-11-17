@@ -1,28 +1,22 @@
 let CUR, PREV
 
-chrome.tabs.onActivated.addListener(async function () {
-    let t = await getCurrentTab()
-    PREV = CUR
-    CUR = t
-    console.log('current tab_id and url = ' + CUR.id + ' ' + CUR.url)
-    console.log('prev tab_id and url = ' + PREV.id + ' ' + PREV.url)
-})
+async function getPrevTab() {
+    // goal is to get the most recently used tab from list of tabs in current window
+    let tabs = await chrome.tabs.query({ currentWindow: true })
 
-// chrome.tabs.onUpdated.addListener(function () {
-//     console.log('huh update')
-// })
-//
-// chrome.tabs.onRemoved.addListener(function () {
-//     console.log('tab removed')
-// })
-//
-async function getCurrentTab() {
-    let queryOptions = { active: true, lastFocusedWindow: true }
-    // `tab` will either be a `tabs.Tab` instance or `undefined`.
-    let [tab] = await chrome.tabs.query(queryOptions)
-    return tab
+    // Sort tabs by lastAccessed in descending order
+    tabs.sort((a, b) => b.lastAccessed - a.lastAccessed)
+
+    // return PREV
+    if (tabs.length == 1) {
+        return tabs[0]
+    } else {
+        return tabs[1]
+    }
 }
-chrome.commands.onCommand.addListener(async (command) => {
-    console.log(`Command "${command}" triggered, you want to toggle tabs`)
-    chrome.tabs.update(PREV.id, { active: true });
+
+chrome.commands.onCommand.addListener(async () => {
+    PREV = await getPrevTab()
+    console.log('PREV to switch : ' + PREV)
+    chrome.tabs.update(PREV.id, { active: true })
 })

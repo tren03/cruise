@@ -10,7 +10,7 @@
         "default_popup": "./dist/popup.html",
         "default_title": "cruise"
     },
-    "permissions": ["tabs", "history", "topSites", "bookmarks"],
+    "permissions": ["tabs", "history", "topSites", "bookmarks", "windows"],
     "commands": {
         "toggle-tabs": {
             "suggested_key": {
