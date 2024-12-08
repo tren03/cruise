@@ -42,11 +42,15 @@ Cruise provides several keyboard shortcuts to make navigation faster and more ef
 
 ## Usage
 
-Use `Alt +  Y` to open the Cruise dialog
+### 1. Switching Between Modes:
+Use `Alt +  Y` to open the Cruise dialog and just type the tab you want to switch too and hit enter, you can also navigate via the arrow keys.
+
+https://github.com/user-attachments/assets/8b7e977f-1ed0-4e39-8b43-f596c1fc99aa
+
 
 ### 1. Switching Between Modes:
 
-Use `Alt + <key>` to switch between modes:
+Use `Alt + <key>` to switch between modes when the Cruise dialog is open:
 
 - `T` - Tabs
 - `H` - History
