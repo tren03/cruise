@@ -48,7 +48,7 @@ Use `Alt +  Y` to open the Cruise dialog and just type the tab you want to switc
 https://github.com/user-attachments/assets/8b7e977f-1ed0-4e39-8b43-f596c1fc99aa
 
 
-### 1. Switching Between Modes:
+### 2. Switching Between Modes:
 
 Use `Alt + <key>` to switch between modes when the Cruise dialog is open:
 
@@ -63,7 +63,7 @@ The Mode is indicated by a letter the the input bar to the left
 https://github.com/user-attachments/assets/e13a0af0-753a-497c-8856-99de98a649cc
 
 
-### 2. Command Mode Usage:
+### 3. Command Mode Usage:
 Use `/` to get into command mode
 
 https://github.com/user-attachments/assets/35c8ec2e-ddaf-45ec-b253-8016dcd902df
