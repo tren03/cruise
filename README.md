@@ -1,4 +1,5 @@
 # Cruise - A Fuzzy Finder for Tabs on Chromium-Based Browsers
+# *** Clone the marks branch to get most previous tab switch with alt - u ***
 ## Introduction
 ****Cruise**** is a browser extension that lets you quickly fuzzy-find open tabs in any Chromium-based browser. It helps you efficiently navigate through your tabs using keyboard shortcuts, inspired by ****Telescope**** from Neovim.
 
